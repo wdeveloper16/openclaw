@@ -290,6 +290,26 @@ export function registerModelsCli(program: Command) {
   });
 
   auth
+    .command("list")
+    .description("List configured auth profiles")
+    .option("--provider <name>", "Filter by provider id")
+    .option("--json", "Output JSON", false)
+    .action(async (opts, command) => {
+      const agent = resolveOptionFromCommand<string>(command, "agent");
+      await runModelsCommand(async () => {
+        const { modelsAuthListCommand } = await import("../commands/models/auth-list.js");
+        await modelsAuthListCommand(
+          {
+            provider: opts.provider as string | undefined,
+            json: Boolean(opts.json),
+            agent,
+          },
+          defaultRuntime,
+        );
+      });
+    });
+
+  auth
     .command("add")
     .description("Interactive auth helper (provider auth or paste token)")
     .action(async (command) => {
