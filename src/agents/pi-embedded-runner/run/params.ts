@@ -30,6 +30,8 @@ export type CurrentTurnPromptContext = {
     body: string;
     senderLabel?: string;
     isQuote?: boolean;
+    /** Full source message text when isQuote is true (the text the user selected from). */
+    quoteSourceText?: string;
   };
 };
 

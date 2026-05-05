@@ -1172,6 +1172,42 @@ describe("runPreparedReply media-only handling", () => {
     });
   });
 
+  it("threads selected-quote source text as quoteSourceText in current-turn context", async () => {
+    await runPreparedReply(
+      baseParams({
+        ctx: {
+          Body: "what does this mean?",
+          RawBody: "what does this mean?",
+          CommandBody: "what does this mean?",
+          Provider: "telegram",
+          Surface: "telegram",
+          ChatType: "group",
+        },
+        sessionCtx: {
+          Body: "what does this mean?",
+          BodyStripped: "what does this mean?",
+          Provider: "telegram",
+          Surface: "telegram",
+          ChatType: "group",
+          ReplyToSender: "Jake",
+          ReplyToBody: "beta",
+          ReplyToIsQuote: true,
+          ReplyToQuoteSourceText: "alpha beta gamma",
+        },
+      }),
+    );
+
+    const call = vi.mocked(runReplyAgent).mock.calls.at(-1)?.[0];
+    expect(call?.followupRun.currentTurnContext).toEqual({
+      reply: {
+        senderLabel: "Jake",
+        body: "beta",
+        isQuote: true,
+        quoteSourceText: "alpha beta gamma",
+      },
+    });
+  });
+
   it("keeps heartbeat prompts out of visible transcript prompt", async () => {
     const heartbeatPrompt = "Read HEARTBEAT.md and run any due maintenance.";
 

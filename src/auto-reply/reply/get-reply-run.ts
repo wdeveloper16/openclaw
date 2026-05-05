@@ -352,6 +352,8 @@ function resolveCurrentTurnPromptContext(
   if (!replyBody) {
     return undefined;
   }
+  const quoteSourceText =
+    ctx.ReplyToIsQuote === true ? normalizeOptionalString(ctx.ReplyToQuoteSourceText) : undefined;
   return {
     reply: {
       body: replyBody,
@@ -359,6 +361,7 @@ function resolveCurrentTurnPromptContext(
         ? { senderLabel: normalizeOptionalString(ctx.ReplyToSender) }
         : {}),
       ...(ctx.ReplyToIsQuote === true ? { isQuote: true } : {}),
+      ...(quoteSourceText ? { quoteSourceText } : {}),
     },
   };
 }

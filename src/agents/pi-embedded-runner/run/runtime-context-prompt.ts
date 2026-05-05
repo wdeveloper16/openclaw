@@ -53,12 +53,17 @@ export function buildCurrentTurnPromptContextSuffix(
   if (!reply || !replyBody) {
     return "";
   }
+  const quoteSourceBody =
+    reply.isQuote === true && reply.quoteSourceText?.trim()
+      ? sanitizeCurrentTurnContextString(reply.quoteSourceText.trim())
+      : undefined;
   const payload = {
     sender_label: reply.senderLabel
       ? sanitizeCurrentTurnContextString(reply.senderLabel)
       : undefined,
     is_quote: reply.isQuote === true ? true : undefined,
     body: sanitizeCurrentTurnContextString(replyBody),
+    source_body: quoteSourceBody,
   };
   return [
     "",

@@ -97,6 +97,8 @@ export type MsgContext = {
   ReplyToBody?: string;
   ReplyToSender?: string;
   ReplyToIsQuote?: boolean;
+  /** Full source message text when the user selected a quote portion (ReplyToIsQuote === true). */
+  ReplyToQuoteSourceText?: string;
   /** Forward origin from the reply target (when reply_to_message is a forwarded message). */
   ReplyToForwardedFrom?: string;
   ReplyToForwardedFromType?: string;

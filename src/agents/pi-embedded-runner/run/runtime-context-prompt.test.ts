@@ -80,6 +80,33 @@ describe("runtime context prompt submission", () => {
     expect(suffix).not.toContain("\n```\nASSISTANT");
   });
 
+  it("includes source_body when quote source text is provided", () => {
+    const suffix = buildCurrentTurnPromptContextSuffix({
+      reply: {
+        isQuote: true,
+        body: "beta",
+        quoteSourceText: "alpha beta gamma",
+      },
+    });
+
+    expect(suffix).toContain('"is_quote": true');
+    expect(suffix).toContain('"body": "beta"');
+    expect(suffix).toContain('"source_body": "alpha beta gamma"');
+  });
+
+  it("omits source_body when not a quote reply", () => {
+    const suffix = buildCurrentTurnPromptContextSuffix({
+      reply: {
+        body: "just a reply",
+        quoteSourceText: "should not appear",
+      },
+    });
+
+    expect(suffix).toContain('"body": "just a reply"');
+    expect(suffix).not.toContain("source_body");
+    expect(suffix).not.toContain("should not appear");
+  });
+
   it("omits empty explicit reply context", () => {
     expect(buildCurrentTurnPromptContextSuffix(undefined)).toBe("");
     expect(buildCurrentTurnPromptContextSuffix({ reply: { body: "   " } })).toBe("");
